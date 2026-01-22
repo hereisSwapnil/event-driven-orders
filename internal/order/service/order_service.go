@@ -58,8 +58,9 @@ func (s *OrderService) CreateOrder(ctx context.Context, customerName string, tot
 	}
 
 	if err := s.eventProd.PublishOrderCreated(ctx, events.OrderCreatedEvent{
-		OrderID:   order.ID,
-		CreatedAt: order.CreatedAt,
+		OrderID:     order.ID,
+		CreatedAt:   order.CreatedAt,
+		ScheduledAt: order.ScheduledAt,
 	}); err != nil {
 		return nil, err
 	}
@@ -85,4 +86,29 @@ func (s *OrderService) MarkOrderAsFailed(ctx context.Context, id string) error {
 
 func (s *OrderService) MarkOrderAsProcessing(ctx context.Context, id string) error {
 	return s.repo.UpdateOrderStatus(ctx, id, domain.OrderStatusProcessing)
+}
+
+func (s *OrderService) CompleteOrder(
+	ctx context.Context,
+	orderID string,
+) error {
+
+	// 1. Update database status
+	err := s.repo.UpdateOrderStatus(ctx, orderID, domain.OrderStatusCompleted)
+	if err != nil {
+		return err
+	}
+
+	// 2. Publish completion event (best effort)
+	if s.eventProd != nil {
+		_ = s.eventProd.PublishOrderCompleted(
+			ctx,
+			events.OrderCompletedEvent{
+				OrderID:     orderID,
+				CompletedAt: time.Now().UTC(),
+			},
+		)
+	}
+
+	return nil
 }

@@ -1,10 +1,8 @@
-CREATE TABLE orders (
-    id TEXT PRIMARY KEY,
-    customer_name TEXT NOT NULL,
-    price BIGINT NOT NULL,
-    status TEXT NOT NULL,
-    scheduled_at TIMESTAMP NULL,
+CREATE TABLE IF NOT EXISTS orders (
+    id VARCHAR(255) PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    scheduled_at TIMESTAMP,
     created_at TIMESTAMP NOT NULL
 );
-
-CREATE INDEX idx_orders_status ON orders(status);

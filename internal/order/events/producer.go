@@ -23,3 +23,10 @@ func (p *OrderEventProducer) PublishOrderCreated(
 ) error {
 	return p.producer.Publish(ctx, event.OrderID, event)
 }
+
+func (p *OrderEventProducer) PublishOrderCompleted(
+	ctx context.Context,
+	event OrderCompletedEvent,
+) error {
+	return p.producer.Publish(ctx, event.OrderID, event)
+}
