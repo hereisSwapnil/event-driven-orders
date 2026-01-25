@@ -6,6 +6,8 @@ Event Driven Orders is a scalable, asynchronous order processing system implemen
 ## Architecture
 The project follows **Clean Architecture** principles to ensure separation of concerns:
 
+[![mermaid-diagram-2026-01-25-160716.png](https://i.postimg.cc/8C40VGtP/mermaid-diagram-2026-01-25-160716.png)](https://postimg.cc/hJJr9HkH)
+
 - **Domain Layer** (`internal/order/domain`): Contains core entities (`Order`, `OrderStatus`) and business rules. It has no external dependencies.
 - **Service Layer** (`internal/order/service`): Orchestrates business use cases. Handles the flow between repositories and event producers.
 - **Repository Layer** (`internal/order/repository`): Implements data access interfaces for PostgreSQL and Redis.
